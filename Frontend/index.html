@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dhanush | Full Stack Developer</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a class="nav-link active" data-target="home">Home</a></li>
+            <li><a class="nav-link" data-target="about">About</a></li>
+            <li><a class="nav-link" data-target="skills">Skills</a></li>
+            <li><a class="nav-link" data-target="projects">Projects</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="home" class="active-section">
+            <h1>Hi, I'm Dhanush</h1>
+            <p>Welcome to my developer portfolio.</p>
+        </section>
+
+        <section id="about">
+            <h2>About Me</h2>
+            <p>I am a developer focused on building scalable full-stack applications, currently mastering secure REST APIs, databases, and deployment pipelines.</p>
+        </section>
+
+        <section id="skills">
+            <h2>Technical Skills</h2>
+            <ul>
+                <li>JavaScript (ES6+)</li>
+                <li>Node.js & Express</li>
+                <li>MySQL & MongoDB</li>
+                <li>Python</li>
+            </ul>
+        </section>
+
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <div class="project-card">
+                <h3>Task Management System</h3>
+                <p>A secure, full-stack application featuring JWT authentication and complete CRUD operations backed by a MySQL database.</p>
+                <a href="task-manager.html" target="_blank" class="btn-launch">Launch Secure App &rarr;</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Grab all nav links and sections
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+
+        // Add a click listener to every link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                
+                // 1. Remove 'active' class from all links
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                
+                // 2. Add 'active' class to the clicked link
+                this.classList.add('active');
+
+                // 3. Hide all sections
+                sections.forEach(section => section.classList.remove('active-section'));
+
+                // 4. Find the target section and show it
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active-section');
+            });
+        });
+    </script>
+</body>
+</html>
