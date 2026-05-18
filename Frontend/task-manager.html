@@ -26,16 +26,51 @@
             <button type="submit">Authenticate</button>
         </form>
         <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
-            No account? <a href="#">Register here</a>
+            No account? <a href="register.html">Register here</a>
         </p>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // We will write the fetch() logic here to talk to your Node.js backend
-            console.log("Preparing to send credentials to Express API...");
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // 1. Replace this URL with your actual live Railway public domain URL
+    const BACKEND_URL = 'https://your-railway-backend-url.up.railway.app'; 
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        // 2. Fire the POST request to your authController login endpoint
+        const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
         });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            // Throw an error if the server returns a bad status (like 400 or 401)
+            throw new Error(data.error || 'Authentication failed');
+        }
+
+        // 3. SUCCESS: Store the returned JWT token securely in the browser
+        localStorage.setItem('token', data.token);
+        alert(`Welcome back, ${data.user.name}! Redirecting to dashboard...`);
+        
+        // 4. Redirect to your dashboard page (which we can create next)
+        window.location.href = 'dashboard.html';
+        console.log('Token securely saved:', data.token);
+
+    } catch (error) {
+        // Catch network issues or invalid login alerts
+        alert('Login Error: ' + error.message);
+        console.error('Login failure:', error);
+    }
+});
     </script>
 
 </body>

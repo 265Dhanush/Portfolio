@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager | Register</title>
+    <style>
+        body { font-family: sans-serif; background: #ececec; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 0.8rem; margin: 0.5rem 0 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.8rem; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #219653; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Create Account</h2>
+        <form id="registerForm">
+            <label>Name</label>
+            <input type="text" id="name" required>
+
+            <label>Email</label>
+            <input type="email" id="email" required>
+            
+            <label>Password</label>
+            <input type="password" id="password" required minlength="6">
+            
+            <button type="submit">Register</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+            Already have an account? <a href="task-manager.html">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const BACKEND_URL = 'https://your-railway-backend-url.up.railway.app'; // UPDATE THIS
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error || 'Registration failed');
+
+                alert('Registration successful! Please login.');
+                window.location.href = 'task-manager.html'; 
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+
+</body>
+</html>

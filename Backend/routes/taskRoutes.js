@@ -3,7 +3,6 @@ const { createTask, getTasks, updateTask, deleteTask } = require('../controllers
 const authenticateToken = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// All task routes are protected by the auth middleware
 router.use(authenticateToken); 
 
 router.post('/', createTask);

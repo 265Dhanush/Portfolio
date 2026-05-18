@@ -8,12 +8,13 @@ exports.registerUser = async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await db.query(
-            'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+            'INSERT INTO users (name, email, password) VALUES ($1, $2, $3)',
             [name, email, hashedPassword]
         );
         res.status(201).json({ message: 'User registered successfully!' });
     } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') return res.status(400).json({ error: 'Email already exists' });
+        // Postgres unique violation code is 23505
+        if (error.code === '23505') return res.status(400).json({ error: 'Email already exists' });
         res.status(500).json({ error: error.message });
     }
 };
@@ -21,10 +22,10 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-        if (users.length === 0) return res.status(400).json({ error: 'Invalid email or password' });
+        const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) return res.status(400).json({ error: 'Invalid email or password' });
 
-        const user = users[0];
+        const user = result.rows[0];
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) return res.status(400).json({ error: 'Invalid email or password' });
 
